@@ -1,0 +1,43 @@
+global:
+  sendAnonymousUsage: false
+serversTransport:
+  insecureSkipVerify: true
+api:
+  dashboard: true
+  insecure: true
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    watch: true
+    exposedByDefault: false
+
+  file:
+    filename: /etc/traefik/dynamic.yml
+    watch: true
+
+certificatesResolvers:
+  desec:
+    acme:
+      email: gamingsockee@gmail.com
+      storage: /letsencrypt/acme.json
+      # caserver: https://acme-staging-v02.api.letsencrypt.org/directory
+      dnsChallenge:
+        provider: desec
+        delayBeforeCheck: 0
+
+log:
+  level: Debug
+  format: common
+
+entryPoints:
+  http:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: https
+          scheme: https
+  https:
+    address: ":443"
+    http:

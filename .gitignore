@@ -1,0 +1,10 @@
+bin/
+.env
+.env.*
+
+letsencrypt/*
+!letsencrypt/.gitkeep
+
+certs/*
+!certs/.gitkeep
+

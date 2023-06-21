@@ -1,0 +1,49 @@
+http:
+  routers:
+    rp:
+      rule: "Host(`rp.strideyou.com`)"
+      entrypoints:
+        - http
+        - https
+      service: "api@internal"
+      tls:
+        certresolver: desec
+      middlewares: auth
+
+    backend:
+      rule: "Host(`geo.strideyou.com`)"
+      entrypoints:
+        - http
+        - https
+      service: "backendService"
+      tls:
+        certresolver: desec
+      middlewares: corsheader
+
+    app:
+      rule: "Host(`app.strideyou.com`)"
+      entrypoints:
+        - http
+        - https
+      service: "appService"
+      tls:
+        certresolver: desec
+      middlewares: corsheader
+
+  services:
+    backendService:
+      loadbalancer:
+        servers:
+          - url: "http://backend:3000"
+    appService:
+      loadbalancer:
+        servers:
+          - url: "http://app:3000"
+
+  middlewares:
+    auth:
+      basicauth:
+        users: "socke:$2a$10$y327IF9YYFpOGv8Tu0VRXuGWJfxlAcJVmOQoVOGqGe9zsdJ5u9dOe"
+    corsheader:
+      headers:
+        accesscontrolallowheaders: "*"

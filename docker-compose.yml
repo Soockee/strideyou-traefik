@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+  rp:
+    image: traefik
+    container_name: rp
+    environment:
+      - DESEC_TOKEN=${DESEC_TOKEN}
+      - LEGO_DISABLE_CNAME_SUPPORT=true
+      - DESEC_POLLING_INTERVAL=300
+      - DESEC_PROPAGATION_TIMEOUT=300
+    ports:
+      - 8080:80
+      - 4443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./certs:/etc/certs
+      - ./letsencrypt:/letsencrypt
+      - ${DYNAMIC_CONF_PATH}:/etc/traefik
+    networks:
+      - proxynet
+
+networks:
+  proxynet:
+    name: strideyou_network

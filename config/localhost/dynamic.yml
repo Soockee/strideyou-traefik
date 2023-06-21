@@ -1,0 +1,43 @@
+http:
+  routers:
+    rp:
+      rule: "Host(`rp.docker.localhost`)"
+      service: "api@internal"
+      entrypoints:
+        - http
+        - https
+      tls:
+        domains:
+          - main: "docker.localhost"
+            sans:
+              - "*.docker.localhost"
+
+    backend:
+      rule: "Host(`geo.docker.localhost`)"
+      service: backendService
+      entrypoints:
+        - http
+        - https
+      tls:
+        domains:
+          - main: "docker.localhost"
+            sans:
+              - "*.docker.localhost"
+  services:
+    backendService:
+      loadbalancer:
+        servers:
+          - url: "http://backend:3000"
+
+  middlewares:
+    auth:
+      basicauth:
+        users: socke:$$2a$$10$$y327IF9YYFpOGv8Tu0VRXuGWJfxlAcJVmOQoVOGqGe9zsdJ5u9dOe
+    corsheader:
+      headers:
+        accesscontrolallowheaders: "*"
+
+tls:
+  certificates:
+    - certFile: "/etc/certs/local-cert.pem"
+      keyFile: "/etc/certs/local-key.pem"
