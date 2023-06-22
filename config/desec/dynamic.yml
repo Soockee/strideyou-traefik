@@ -13,7 +13,6 @@ http:
     backend:
       rule: "Host(`geo.strideyou.com`)"
       entrypoints:
-        - http
         - https
       service: "backendService"
       tls:
@@ -23,7 +22,6 @@ http:
     app:
       rule: "Host(`app.strideyou.com`)"
       entrypoints:
-        - http
         - https
       service: "appService"
       tls:
